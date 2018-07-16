@@ -9,7 +9,7 @@
     <div class="tab">
       <van-row>
         <van-col :span="footerTabCol" v-for="(item,index) in $router.options.routes" :key="index" v-if="!item.hidden">
-          <div @click="tabClick(item)">{{item.name}}</div>
+          <span @click="tabClick(item)">{{item.name}}</span>
       </van-col>
       </van-row>
     </div>
@@ -60,7 +60,7 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-@import './common/stylus/base.styl';
+@import './common/stylus/base.styl'
 .app
   width:100%
   height:100%
@@ -71,9 +71,36 @@ export default {
     position:fixed
     top:0
     left:0
+    background-color:#20a0ff
+    color:#fff
+    .header-wrap
+      width:100%;
+      height:100%;
+      background-color:@background-color
   .content
     width:100%
     height:100%
     padding-interior()
     padding-top:42px
+    padding-bottom:42px
+    .flex-wrap
+      padding-interior()
+      padding-bottom:42px
+  .tab
+    width:100%
+    height:40px
+    position:fixed
+    bottom:0
+    left:0
+    background-color:#20a0ff
+    color:#fff
+    .van-row
+      width:100%
+      height:100%
+      .van-col
+        height:100%
+        display:flex
+        justify-content:center
+        align-items:center
+        cursor:pointer
 </style>
