@@ -8,7 +8,8 @@ import components from './components/'
 
 // 引入store
 import createStore from './store'
-
+import Mock from './mock'
+Mock.bootstrap()
 Vue.use(Vant)
 Vue.use(Vuex)
 const store = createStore()

@@ -8,7 +8,7 @@
     </div>
     <div class="tab">
       <van-row>
-        <van-col :span="footerTabCol" v-for="(item,index) in $router.options.routes" :key="index" v-if="!item.hidden">
+        <van-col :span="footerTabCol" v-for="(item,index) in $router.options.routes" :key="index" v-if="!item.hidden" :style="index == 0 ? {border:'none'} : {borderLeft:'1px solid #999'}">
           <span @click="tabClick(item)">{{item.name}}</span>
       </van-col>
       </van-row>
@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     tabClick (route) {
-      this.headerData.title = route.name
       this.$router.push(route.path)
     },
     headerClickLeft () {
@@ -42,6 +41,9 @@ export default {
     headerClickRight () {
       console.log('header right click')
     }
+  },
+  updated () {
+    this.headerData.title = this.$route.name
   },
   mounted () {
     const routes = this.$router.options.routes
@@ -73,6 +75,7 @@ export default {
     left:0
     background-color:#20a0ff
     color:#fff
+    z-index:100
     .header-wrap
       width:100%;
       height:100%;
@@ -94,6 +97,7 @@ export default {
     left:0
     background-color:#20a0ff
     color:#fff
+    z-index:100
     .van-row
       width:100%
       height:100%

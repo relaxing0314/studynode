@@ -1,5 +1,6 @@
 # studynode
 学习记录
+[TOC]
 
 ## Build Setup
 
@@ -19,6 +20,13 @@ npm run build --report
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
-> 1 flex node
+## 1 flex node
 
-
+## 2 vue node
+### 2.1 导出Excel表格数据
+```
+# install dependencies
+npm install file-saver --save
+npm install xlsx --save
+npm install script-loader --save-dev
+```
