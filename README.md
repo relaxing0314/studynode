@@ -23,7 +23,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 ## 1 flex node
 
 ## 2 vue node
-### 2.1 导出Excel表格数据
+### 2.1 管理系统
 ```
 # install dependencies
 npm install file-saver --save
