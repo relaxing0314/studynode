@@ -3,7 +3,7 @@ const LoginUsers = [
   {
     id: 1,
     username: 'Anna',
-    phone: '15637846964',
+    phone: '13233356784',
     password: 'A123456',
     avatar: 'static/img/user.gif',
     name: '安妮'

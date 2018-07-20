@@ -12,76 +12,21 @@
 			<el-table-column prop="age" label="年龄" width="100" sortable></el-table-column>
 			<el-table-column prop="birth" label="生日" width="120" sortable></el-table-column>
 			<el-table-column prop="addr" label="地址" min-width="180" sortable></el-table-column>
-			<el-table-column label="操作" width="150">
-				<template scope="scope">
-					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+			<el-table-column label="操作" width="100">
+				<template slot-scope="scope">
+					<el-button type="text" size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+					<el-button type="text" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
 
-		<!--工具条-->
-		<el-col :span="24" class="toolbar">
-			<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
-			<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
-			</el-pagination>
-		</el-col>
+		<!--分页工具条-->
+    <el-col :span="24" class="toolbar">
+      <Pagination :pageSize="$store.state.pageSize" :total="total" :currentPage="page" v-on:pagego="pageblur"></Pagination>
+    </el-col>
 
-		<!--编辑界面-->
-		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-				<el-form-item label="姓名" prop="name">
-					<el-input v-model="editForm.name" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="性别">
-					<el-radio-group v-model="editForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="年龄">
-					<el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
-				</el-form-item>
-				<el-form-item label="生日">
-					<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-				</el-form-item>
-				<el-form-item label="地址">
-					<el-input type="textarea" v-model="editForm.addr"></el-input>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="editFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-			</div>
-		</el-dialog>
-
-		<!--新增界面-->
-		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-				<el-form-item label="姓名" prop="name">
-					<el-input v-model="addForm.name" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="性别">
-					<el-radio-group v-model="addForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="年龄">
-					<el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
-				</el-form-item>
-				<el-form-item label="生日">
-					<el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
-				</el-form-item>
-				<el-form-item label="地址">
-					<el-input type="textarea" v-model="addForm.addr"></el-input>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
-			</div>
-		</el-dialog>
+		<!--弹窗-->
+    <FormDialog :data="formDialogData" :listLoading="listLoading" v-on:resetState="changeState" v-on:formSub="_formSub"></FormDialog>
 	</section>
 </template>
 
@@ -96,7 +41,8 @@
         btnlists:[
           {event:"toFilter",name:"姓名",value:"",isDisabled:false,type:"input",btn:"查询",startDis:false},
           {event:"toAdd",name:"新增",value:"",isDisabled:false,type:"button",btn:"",startDis:false},
-          {event:"toDeleteMore",name:"批量删除",value:"",isDisabled:true,type:"button",btn:"",startDis:true}
+          {event:"toDeleteMore",name:"批量删除",value:"",isDisabled:true,type:"button",btn:"",startDis:true},
+          {event:"toExport",name:"导出",value:"",isDisabled:false,type:"button",btn:"",startDis:false},
         ],//table列表上方btn
 
 				filters: {
@@ -108,50 +54,22 @@
 				listLoading: false,
 				sels: [],//列表选中列
 
-				editFormVisible: false,//编辑界面是否显示
-				editLoading: false,
-				editFormRules: {
-					name: [
-						{ required: true, message: '请输入姓名', trigger: 'blur' }
-					]
-				},
-				//编辑界面数据
-				editForm: {
-					id: 0,
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: ''
-				},
-
-				addFormVisible: false,//新增界面是否显示
-				addLoading: false,
-				addFormRules: {
-					name: [
-						{ required: true, message: '请输入姓名', trigger: 'blur' }
-					]
-				},
-				//新增界面数据
-				addForm: {
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: ''
-				}
-
+        formDialogData:{
+          title:"",
+          width:"40%",
+          labelWidth:"100px",
+          event:"",
+          id:"",
+          form:{},
+          rules:{},
+          label:{},
+          formType:{},
+          fromTypeList:{},
+          isDisabledList:{}
+        }
 			}
 		},
 		methods: {
-			//性别显示转换
-			formatSex: function (row, column) {
-				return DefinedState.sex[row.sex];
-			},
-			handleCurrentChange(val) {
-				this.page = val;
-				this.getUsers();
-			},
 			//获取用户列表
 			getUsers() {
 				let para = {
@@ -166,8 +84,17 @@
 					this.listLoading = false;
 				});
 			},
+      //性别显示转换
+      formatSex: function (row, column) {
+        return DefinedState.sex[row.sex];
+      },
+      //弹窗取消或关闭
+      changeState:function(){
+        this.formDialogData.isVisible = false;
+      },
 			//删除
 			handleDel: function (index, row) {
+        const that = this;
 				this.$confirm('确认删除该记录吗?', '提示', {
 					type: 'warning'
 				}).then(() => {
@@ -175,70 +102,136 @@
 					let para = { id: row.id };
 					removeUser(para).then((res) => {
 						this.listLoading = false;
-						this.$message({
-							message: '删除成功',
-							type: 'success'
-						});
+						Message(that,false,"删除成功",1);
 						this.getUsers();
 					});
 				}).catch(() => {});
 			},
 			//显示编辑界面
 			handleEdit: function (index, row) {
-				this.editFormVisible = true;
-				this.editForm = Object.assign({}, row);
+        let data = Object.assign({}, row);
+        const {name,sex,age,birth,addr} = data;
+        this.formDialogData = {
+          title:"编辑",
+          width:"530px",
+          labelWidth:"60px",
+          event:"add",
+          isVisible:true,
+          id:row.id,
+          form:{name,sex,age,birth,addr},
+          rules:{
+            name: [
+              { required: true, message: '请输入姓名', trigger: 'blur' }
+            ],
+            addr: [
+              { required: true, message: '请输入姓名', trigger: 'blur' }
+            ],
+            age: [
+              { required: true, message: '请输入姓名', trigger: 'blur' }
+            ],
+            birth: [
+              { required: true, message: '请输入姓名', trigger: 'blur' }
+            ]
+          },
+          label:DefinedState.dld,
+          formType:{
+            name:"p",
+            sex:"radio",
+            age:"inputNumber",
+            birth:"date",
+            addr:"textarea"
+          },
+          fromTypeList:{
+            age:{min:0,max:200},
+            sex: [
+              {label:0,dld:DefinedState.sex[0]},
+              {label:1,dld:DefinedState.sex[1]}
+            ]
+          },
+          isDisabledList:{
+            name:false,
+            sex:false,
+            age:false,
+            birth:false,
+            addr:false
+          }
+        }
 			},
 			//显示新增界面
 			handleAdd: function () {
-				this.addFormVisible = true;
-				this.addForm = {
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: ''
-				};
+        this.formDialogData = {
+          title:"新增",
+          width:"530px",
+          labelWidth:"60px",
+          event:"add",
+          isVisible:true,
+          id:"",
+          form:{name:"",sex:0,age:null,birth:"",addr:""},
+          rules:{
+            name: [
+              { required: true, message: '请输入姓名', trigger: 'blur' }
+            ]
+          },
+          label:DefinedState.dld,
+          formType:{
+            name:"input",
+            sex:"radio",
+            age:"inputNumber",
+            birth:"date",
+            addr:"textarea"
+          },
+          fromTypeList:{
+            age:{min:0,max:200},
+            sex: [
+              {label:0,dld:DefinedState.sex[0]},
+              {label:1,dld:DefinedState.sex[1]}
+            ]
+          },
+          isDisabledList:{
+            name:false,
+            sex:false,
+            age:false,
+            birth:false,
+            addr:false
+          }
+        }
 			},
 			//编辑
 			editSubmit: function () {
         const that = this;
-				this.$refs.editForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确认提交吗？', '提示', {}).then(() => {
-							this.editLoading = true;
-							let para = Object.assign({}, this.editForm);
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							editUser(para).then((res) => {
-								this.editLoading = false;
-								Message(that,false,"提交成功",1);
-								this.$refs['editForm'].resetFields();
-								this.editFormVisible = false;
-								this.getUsers();
-							});
-						});
-					}
-				});
+				this.$confirm('确认提交吗？', '提示', {}).then(() => {
+          this.listLoading = true;
+          const para = {...Object.assign({}, this.formDialogData.form),...{id:this.formDialogData.id}};
+          editUser(para).then((res) => {
+            this.listLoading = false;
+            this.formDialogData.isVisible = false;
+            Message(that,false,"提交成功",1);
+            this.getUsers();
+          });
+        });
 			},
 			//新增
 			addSubmit: function () {
         const that = this;
-				this.$refs.addForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确认提交吗？', '提示', {}).then(() => {
-							this.addLoading = true;
-							let para = Object.assign({}, this.addForm);
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							addUser(para).then((res) => {
-								this.addLoading = false;
-								Message(that,false,"提交成功",1);
-								this.$refs['addForm'].resetFields();
-								this.addFormVisible = false;
-								this.getUsers();
-							});
-						});
-					}
-				});
+				this.$confirm('确认提交吗？', '提示', {}).then(() => {
+          this.listLoading = true;
+          const para = Object.assign({},this.formDialogData.form);
+          addUser(para).then((res) => {
+            this.listLoading = false;
+            this.formDialogData.isVisible = false;
+            Message(that,false,"新增成功",1);
+            this.getUsers();
+          });
+        });
 			},
+      // formDialog提交
+      _formSub(type){
+        if(type === "edit"){
+          this.editSubmit();
+        }else if(type === "add"){
+          this.addSubmit();
+        }
+      },
 			selsChange: function (sels) {
 				this.sels = sels;
         this.btnlists.map(v => {
@@ -267,18 +260,51 @@
 					});
 				}).catch(() => {});
 			},
+      //导出
+      toExport(){
+        this.listLoading = true;
+        import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = ['编号', '姓名', '性别', '年龄（岁）','生日', '地址']
+          const filterVal = ['id', 'name', 'sex', 'age', 'birth','addr']
+          const list = this.users;
+          const data = this.formatJson(filterVal, list);
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: "用户",
+            autoWidth: true
+          })
+          this.listLoading = false;
+        })
+      },
+      formatJson(filterVal, jsonData) {
+        return jsonData.map(v => filterVal.map(j => {
+          if (j === 'timestamp') {
+            return parseTime(v[j])
+          } else {
+            return v[j]
+          }
+        }))
+      },
       //table列表上方操作按钮
       tableBtn(data){
-        if(data.event == "toFilter"){
+        if(data.event === "toFilter"){
           this.filters.name = data.value;
           this.getUsers();
-        }else if(data.event == "toAdd"){
+        }else if(data.event === "toAdd"){
           this.handleAdd();
-        }else if(data.event == "toDeleteMore"){
+        }else if(data.event === "toDeleteMore"){
           this.batchRemove();
+        }else if(data.event === "toExport"){
+          this.toExport();
         }else{
           return false;
         }
+      },
+      //换页
+      pageblur(val) {
+        this.page = val;
+        this.getUsers();
       }
 		},
 		mounted() {
@@ -288,5 +314,21 @@
 
 </script>
 <style lang="scss">
-
+.el-table__header{
+  th{
+    .cell{
+      text-align:center;
+    }
+  }
+}
+.el-table__body{
+  td{
+    .cell{
+      text-align:center;
+      div{
+        text-align:center;
+      }
+    }
+  }
+}
 </style>

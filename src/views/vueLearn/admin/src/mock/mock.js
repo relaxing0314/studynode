@@ -133,7 +133,7 @@ export default {
     //新增用户
     mock.onGet('/user/add').reply(config => {
       let { name, addr, age, birth, sex } = config.params;
-      _Users.push({
+      _Users.unshift({
         name: name,
         addr: addr,
         age: age,

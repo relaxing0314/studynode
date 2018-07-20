@@ -45,8 +45,8 @@
         logining: false,
         checked:true,
         ruleForm2: {
-          phone: "",
-          checkPass: ''
+          phone: "13233356784",
+          checkPass: 'A123456'
         },
         rules2: {
           phone: [
@@ -92,6 +92,7 @@
 </script>
 
 <style lang="scss">
+@import '~scss_vars';
   .login-container {
     -webkit-border-radius: 5px;
     border-radius: 5px;
@@ -107,11 +108,13 @@
       margin: 0px auto 40px auto;
       text-align: center;
       color: #505458;
+      font-size:25px;
     }
     .el-input__prefix{
       top:2px;
       .el-input__icon{
         font-size:20px;
+        color:$color-dark-gray;
       }
     }
     .remember {
