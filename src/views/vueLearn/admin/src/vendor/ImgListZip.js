@@ -1,7 +1,6 @@
 /* eslint-disable */
 require('script-loader!file-saver');
 import JSZip from 'jszip'
-import {getBase64Image} from '../common/js/util'
 
 /*
  *jsonData 图片地址，格式["",""]

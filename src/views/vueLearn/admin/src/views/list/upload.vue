@@ -6,23 +6,33 @@
     >
       <h2 class="upload-tit">{{item.title}}</h2>
       <el-upload
+        :ref="'upload' + index"
         :class="item.class"
         :action="item.action"
         :accept="item.accept"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
+        :on-change="handleChange"
         :on-success="uploadSuccess"
         :before-upload="beforeUpload"
         :before-remove="beforeRemove"
         :multiple="item.multiple"
         :limit="item.limit"
+        :drag="item.drag"
         :list-type="item.type"
         :auto-upload="item.isAutoUpload"
         :on-exceed="handleExceed"
         :show-file-list="item.isShowList"
         :file-list="item.fileList">
 
-        <el-button v-if="item.type != 'picture-card'" size="small" type="primary">点击上传</el-button>
+        <el-button v-if="item.type != 'picture-card' && !item.drag && item.isAutoUpload" size="small" type="primary">点击上传</el-button>
+
+        <i v-if="item.drag" class="el-icon-upload"></i>
+        <div v-if="item.drag" class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+
+        <el-button v-if="!item.isAutoUpload && !item.drag" slot="trigger" size="small" type="primary">选取文件</el-button>
+        <el-button v-if="!item.isAutoUpload && !item.drag" style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+
         <div v-if="item.type != 'picture-card'" slot="tip" class="el-upload__tip">{{item.desc}}</div>
 
         <img v-if="imageUrl" :src="imageUrl" class="avatar">
@@ -55,6 +65,7 @@
             fileList:DefinedState.imgList,
             multiple:true,
             limit:3,
+            drag:false,
             isAutoUpload:true,
             isShowList:true,
             desc:"只能上传jpg/png文件，且不超过500kb"
@@ -68,6 +79,7 @@
             fileList:DefinedState.imgList,
             multiple:true,
             limit:1,
+            drag:false,
             isAutoUpload:true,
             isShowList:false,
             desc:""
@@ -81,6 +93,7 @@
             fileList:DefinedState.imgList,
             multiple:true,
             limit:1,
+            drag:false,
             isAutoUpload:true,
             isShowList:true,
             desc:""
@@ -94,7 +107,50 @@
             fileList:DefinedState.imgList,
             multiple:true,
             limit:3,
+            drag:false,
             isAutoUpload:true,
+            isShowList:true,
+            desc:"只能上传jpg/png文件，且不超过500kb"
+          },
+          {
+            title:"上传文件列表控制",
+            class:"",
+            type:"text",
+            accept:".png",
+            action:"https://jsonplaceholder.typicode.com/posts/",
+            fileList:DefinedState.imgList,
+            multiple:true,
+            limit:3,
+            drag:false,
+            isAutoUpload:true,
+            isShowList:true,
+            desc:"只能上传jpg/png文件，且不超过500kb"
+          },
+          {
+            title:"拖拽上传",
+            class:"",
+            type:"text",
+            accept:".png",
+            action:"https://jsonplaceholder.typicode.com/posts/",
+            fileList:DefinedState.imgList,
+            multiple:true,
+            limit:3,
+            drag:true,
+            isAutoUpload:true,
+            isShowList:true,
+            desc:"只能上传jpg/png文件，且不超过500kb"
+          },
+          {
+            title:"手动上传",
+            class:"",
+            type:"text",
+            accept:".png",
+            action:"https://jsonplaceholder.typicode.com/posts/",
+            fileList:DefinedState.imgList,
+            multiple:true,
+            limit:3,
+            drag:false,
+            isAutoUpload:false,
             isShowList:true,
             desc:"只能上传jpg/png文件，且不超过500kb"
           }
@@ -102,6 +158,9 @@
       };
     },
     methods: {
+      handleChange(file, fileList) {
+        this.uploadData[4].fileList = fileList.slice(-3);
+      },
       //文件列表移除文件
       handleRemove(file, fileList) {
         console.log("文件列表移除文件",file, fileList);
@@ -138,6 +197,10 @@
       //文件超出个数限制
       handleExceed(files, fileList) {
         this.$message.warning(`当前选择文件超出个数限制，请重新选择`);
+      },
+      submitUpload() {
+        console.log("上传到服务器");
+        this.$refs.upload6.submit();
       }
     }
   }
