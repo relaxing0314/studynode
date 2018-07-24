@@ -5,7 +5,10 @@ import Table from './views/list/Table.vue'
 import Upload from './views/list/upload.vue'
 import Zip from './views/list/zip.vue'
 import CountTo from './views/count/countTo.vue'
-import Editor from './views/editor/tinymce.vue'
+import Word from './views/editor/tinymce.vue'
+import Markdown from './views/editor/markdown.vue'
+import Json from './views/editor/json.vue'
+import Draggable from './views/editor/draggable.vue'
 import echarts from './views/charts/echarts.vue'
 import LineEcharts from './views/charts/line.vue'
 import Keyboard from './views/charts/keyboard.vue'
@@ -28,7 +31,7 @@ let routes = [
         path: '/',
         component: Home,
         name: 'Table Upload Zip',
-        iconCls: 'el-icon-message',
+        iconCls: 'fa fa-list',
         children: [
             { path: '/table', component: Table, name: 'Table' },
             { path: '/upload', component: Upload, name: 'Upload' },
@@ -39,7 +42,7 @@ let routes = [
         path: '/',
         component: Home,
         name: 'Count',
-        iconCls: 'fa fa-id-card-o',
+        iconCls: 'fa fa-cubes',
         leaf: true,//只有一个节点
         children: [
             { path: '/countTo', component: CountTo, name: 'CountTo' }
@@ -49,10 +52,12 @@ let routes = [
         path: '/',
         component: Home,
         name: 'Editor',
-        iconCls: 'fa fa-address-card',
-        leaf: true,//只有一个节点
+        iconCls: 'fa fa-pencil-square-o',
         children: [
-            { path: '/editor', component: Editor, name: 'Editor' }
+          { path: '/word', component: Word, name: 'Word' },
+          { path: '/markdown', component: Markdown, name: 'Markdown' },
+          { path: '/json', component: Json, name: 'Json' },
+          { path: '/draggable', component: Draggable, name: 'Draggable' }
         ]
     },
     {

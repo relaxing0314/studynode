@@ -1,8 +1,5 @@
 <template>
-  <div class="components-container">
-    <code>
-      <a target="_blank" class="link-type" href="https://panjiachen.github.io/vue-element-admin-site/#/rich-editor"> {{$t('components.documentation')}}</a>
-    </code>
+  <div class="editor-wrap">
     <div>
       <tinymce :height="300" v-model="content"></tinymce>
     </div>
@@ -26,10 +23,36 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.editor-content{
+<style lang="scss" scope>
+.editor-wrap{
   margin-top: 20px;
+  h1 {
+    display: block;
+    font-size: 2em;
+    -webkit-margin-before: 0.67em;
+    -webkit-margin-after: 0.67em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-weight: bold;
+  }
+  a {
+    color: #1478F0;
+  }
+  a:-webkit-any-link:read-write {
+    cursor: text;
+  }
+  a:-webkit-any-link {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  p {
+    margin: 1em 0;
+  }
+  ul{
+    li{
+      line-height:1.3;
+    }
+  }
 }
 </style>
 
