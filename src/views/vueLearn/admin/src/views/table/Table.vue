@@ -114,7 +114,7 @@
         this.formDialogData = {
           title:"编辑",
           width:"530px",
-          labelWidth:"60px",
+          labelWidth:"70px",
           event:"add",
           isVisible:true,
           id:row.id,
@@ -162,7 +162,7 @@
         this.formDialogData = {
           title:"新增",
           width:"530px",
-          labelWidth:"60px",
+          labelWidth:"70px",
           event:"add",
           isVisible:true,
           id:"",

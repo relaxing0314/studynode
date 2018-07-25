@@ -1,7 +1,8 @@
 import Login from './views/Login.vue'
 import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
-import Table from './views/list/Table.vue'
+import Table from './views/table/Table.vue'
+import TablePower from './views/table/tablePower.vue'
 import Upload from './views/list/upload.vue'
 import Zip from './views/list/zip.vue'
 import CountTo from './views/count/countTo.vue'
@@ -30,10 +31,19 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: 'Table Upload Zip',
-        iconCls: 'fa fa-list',
+        name: 'Table',
+        iconCls: 'fa fa-table',
         children: [
             { path: '/table', component: Table, name: 'Table' },
+            { path: '/tablePower', component: TablePower, name: 'TablePower' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: 'Upload Zip',
+        iconCls: 'fa fa-list',
+        children: [
             { path: '/upload', component: Upload, name: 'Upload' },
             { path: '/zip', component: Zip, name: 'Zip' },
         ]

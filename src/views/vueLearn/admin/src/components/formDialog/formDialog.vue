@@ -13,7 +13,7 @@
     >
       <el-form-item v-for="(val,nam) in data.form"
         :key="nam"
-        :label="data.label[nam]"
+        :label="setLabel(data.label[nam])"
         :prop="nam"
       >
         <p v-if="data.formType[nam] === 'p'">

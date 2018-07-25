@@ -137,3 +137,58 @@ export function xData(num){
   }
   return data
 }
+
+//判断是否为数组类型
+export function isArray(obj){
+  return (typeof obj == 'object')&&obj.constructor == Array;
+}
+
+//判断是否为字符串类型
+export function isString(str){
+  return (typeof str == 'string')&&str.constructor == String;
+}
+
+//判断是否为数值类型
+export function isNumber(obj){
+  return (typeof obj == 'number')&&obj.constructor == Number;
+}
+
+//判断是否为日期类型
+export function isDate(obj){
+  return (typeof obj == 'object')&&obj.constructor == Date;
+}
+
+//判断是否为函数
+export function isFunction(obj){
+  return (typeof obj == 'function')&&obj.constructor == Function;
+}
+
+//判断是否为对象
+export function isObject(obj){
+  return (typeof obj == 'object')&&obj.constructor == Object;
+}
+
+export function filterArr(obj,val){
+  let valArr = [];
+  for(let i in obj){
+    obj[i].map(v => {
+      if(v.indexOf("_") == 0){
+        const t_val = v.split("_").join("");
+        if(val.indexOf(t_val) > -1){
+          valArr.push(v)
+        }
+      }
+    })
+  }
+  return valArr;
+}
+
+export function getParent(arr,val){
+  let parent = "";
+  arr.map((v,i) => {
+    if(v.indexOf("_") > 0 && v.indexOf(val) > -1){
+      parent = v;
+    }
+  })
+  return parent;
+}
