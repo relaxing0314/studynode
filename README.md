@@ -24,6 +24,14 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ## 2 vue node
 ### 2.1 管理系统
+#### 2.1.1 Table 增删改查导出
+#### 2.1.2 Upload 文件上传
+#### 2.1.3 Zip 文件及图片zip打包下载
+#### 2.1.4 CountTo 数字滚动
+#### 2.1.5 Editor 编辑器
+##### 2.1.5.1 Word编辑器
+##### 2.1.5.2 Markdown编辑器
+#### 2.1.6 Echarts 图表
 ```
 # install dependencies
 npm install file-saver --save
